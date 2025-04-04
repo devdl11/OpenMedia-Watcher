@@ -1,14 +1,17 @@
 package fr.dl11.openmedia.graph;
 
-public class NamedLink extends SimpleLink {
-    private String value;
+import fr.dl11.openmedia.common.TaggedElement;
+
+public class NamedLink extends SimpleLink implements TaggedElement {
+    private final String value;
 
     public NamedLink(AbsNode source, AbsNode target, String value) {
         super(source, target);
         this.value = value;
     }
 
-    public String getValue() {
+    @Override
+    public String getTag() {
         return value;
     }
 
