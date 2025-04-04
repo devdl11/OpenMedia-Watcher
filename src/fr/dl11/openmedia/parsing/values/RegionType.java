@@ -1,6 +1,8 @@
-package fr.dl11.openmedia.parsing;
+package fr.dl11.openmedia.parsing.values;
 
-public class RegionType extends AbsParsable{
+import fr.dl11.openmedia.parsing.AbsParsable;
+
+public class RegionType extends AbsParsable {
     public static final RegionType kNational = new RegionType("National");
     public static final RegionType kEurope = new RegionType("Europe");
     public static final RegionType kRegion = new RegionType("Régional");
@@ -9,6 +11,10 @@ public class RegionType extends AbsParsable{
 
     RegionType(String keyword) {
         super(keyword);
+    }
+
+    public RegionType countryRegion(String country) {
+        return new RegionType(country);
     }
 
     @Override

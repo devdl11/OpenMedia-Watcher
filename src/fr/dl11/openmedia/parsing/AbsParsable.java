@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 public abstract class AbsParsable {
     public final String keyword;
 
-    AbsParsable(String keyword) {
+    protected AbsParsable(String keyword) {
         this.keyword = keyword;
     }
 

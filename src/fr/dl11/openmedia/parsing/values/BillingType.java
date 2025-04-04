@@ -1,4 +1,6 @@
-package fr.dl11.openmedia.parsing;
+package fr.dl11.openmedia.parsing.values;
+
+import fr.dl11.openmedia.parsing.AbsParsable;
 
 public class BillingType extends AbsParsable {
     public static final BillingType kFree = new BillingType("Gratuit");

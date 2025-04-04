@@ -1,6 +1,8 @@
-package fr.dl11.openmedia.parsing;
+package fr.dl11.openmedia.parsing.values;
 
-public class EqualityType extends AbsParsable{
+import fr.dl11.openmedia.parsing.AbsParsable;
+
+public class EqualityType extends AbsParsable {
     public static final EqualityType kEqual = new EqualityType("égal à");
     public static final EqualityType kControl = new EqualityType("contrôle");
     public static final EqualityType kParticipate = new EqualityType("participe");

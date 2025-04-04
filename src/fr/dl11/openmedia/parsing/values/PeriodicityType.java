@@ -1,4 +1,6 @@
-package fr.dl11.openmedia.parsing;
+package fr.dl11.openmedia.parsing.values;
+
+import fr.dl11.openmedia.parsing.AbsParsable;
 
 public class PeriodicityType extends AbsParsable {
     public static final PeriodicityType kDaily = new PeriodicityType("Quotidien");

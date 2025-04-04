@@ -1,4 +1,6 @@
-package fr.dl11.openmedia.parsing;
+package fr.dl11.openmedia.parsing.values;
+
+import fr.dl11.openmedia.parsing.AbsParsable;
 
 public class NewsType extends AbsParsable {
     public static final NewsType kTV = new NewsType("Télévision");
