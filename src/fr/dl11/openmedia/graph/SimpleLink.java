@@ -16,4 +16,12 @@ public class SimpleLink {
     public AbsNode getTarget() {
         return target;
     }
+
+    @Override
+    public String toString() {
+        return "SimpleLink{" +
+                "source=" + source +
+                ", target=" + target +
+                '}';
+    }
 }
