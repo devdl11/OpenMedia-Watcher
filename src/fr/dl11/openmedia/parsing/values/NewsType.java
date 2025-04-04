@@ -9,7 +9,6 @@ public class NewsType extends AbsParsable {
     public static final NewsType kGen = new NewsType("Presse (généraliste politique économique)");
     public static final NewsType kNone = new NewsType("Aucun");
 
-
     NewsType(String keyword) {
         super(keyword);
     }
