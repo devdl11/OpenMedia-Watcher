@@ -29,4 +29,9 @@ public abstract class AbstractToken {
 
         throw new IllegalArgumentException("Invalid " + this.getClass().getSimpleName() + ": " + keyword);
     }
+
+    @Override
+    public String toString() {
+        return keyword;
+    }
 }
