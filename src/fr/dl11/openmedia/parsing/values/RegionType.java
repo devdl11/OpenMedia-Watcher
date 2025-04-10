@@ -1,8 +1,8 @@
 package fr.dl11.openmedia.parsing.values;
 
-import fr.dl11.openmedia.parsing.AbsParsable;
+import fr.dl11.openmedia.parsing.AbstractToken;
 
-public class RegionType extends AbsParsable {
+public class RegionType extends AbstractToken {
     public static final RegionType kNational = new RegionType("National");
     public static final RegionType kEurope = new RegionType("Europe");
     public static final RegionType kRegion = new RegionType("Régional");

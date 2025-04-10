@@ -1,8 +1,8 @@
 package fr.dl11.openmedia.parsing.values;
 
-import fr.dl11.openmedia.parsing.AbsParsable;
+import fr.dl11.openmedia.parsing.AbstractToken;
 
-public class NewsType extends AbsParsable {
+public class NewsType extends AbstractToken {
     public static final NewsType kTV = new NewsType("Télévision");
     public static final NewsType kRadio = new NewsType("Radio");
     public static final NewsType kWeb = new NewsType("Site");
@@ -14,7 +14,7 @@ public class NewsType extends AbsParsable {
     }
 
     @Override
-    public NewsType fromString(String keyword) throws IllegalArgumentException {
+    public NewsType fromString(String keyword) {
         try {
             return (NewsType)super.fromString(keyword);
         } catch (IllegalArgumentException e) {
