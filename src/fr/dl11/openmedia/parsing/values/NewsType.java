@@ -1,24 +1,20 @@
 package fr.dl11.openmedia.parsing.values;
 
-import fr.dl11.openmedia.parsing.AbstractToken;
+public enum NewsType {
+    kTV("Télévision"),
+    kRadio("Radio"),
+    kWeb("Site"),
+    kGen("Presse (généraliste politique économique)"),
+    kNone("Aucun");
 
-public class NewsType extends AbstractToken {
-    public static final NewsType kTV = new NewsType("Télévision");
-    public static final NewsType kRadio = new NewsType("Radio");
-    public static final NewsType kWeb = new NewsType("Site");
-    public static final NewsType kGen = new NewsType("Presse (généraliste politique économique)");
-    public static final NewsType kNone = new NewsType("Aucun");
+    private final String keyword;
 
     NewsType(String keyword) {
-        super(keyword);
+        this.keyword = keyword;
     }
 
     @Override
-    public NewsType fromString(String keyword) {
-        try {
-            return (NewsType)super.fromString(keyword);
-        } catch (IllegalArgumentException e) {
-            return kNone;
-        }
+    public String toString() {
+        return keyword;
     }
 }

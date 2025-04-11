@@ -1,13 +1,18 @@
 package fr.dl11.openmedia.parsing.values;
 
-import fr.dl11.openmedia.parsing.AbstractToken;
+public enum PeriodicityType {
+    kDaily("Quotidien"),
+    kWeekly("Hebdomadaire"),
+    kMonthly("Mensuel");
 
-public class PeriodicityType extends AbstractToken {
-    public static final PeriodicityType kDaily = new PeriodicityType("Quotidien");
-    public static final PeriodicityType kWeekly = new PeriodicityType("Hebdomadaire");
-    public static final PeriodicityType kMonthly = new PeriodicityType("Mensuel");
+    private final String keyword;
 
     PeriodicityType(String keyword) {
-        super(keyword);
+        this.keyword = keyword;
+    }
+
+    @Override
+    public String toString() {
+        return keyword;
     }
 }

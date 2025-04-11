@@ -1,12 +1,17 @@
 package fr.dl11.openmedia.parsing.values;
 
-import fr.dl11.openmedia.parsing.AbstractToken;
+public enum BillingType {
+    kFree("Gratuit"),
+    kPaid("Payant");
 
-public class BillingType extends AbstractToken {
-    public static final BillingType kFree = new BillingType("Gratuit");
-    public static final BillingType kPaid = new BillingType("Payant");
+    private final String keyword;
 
     BillingType(String keyword) {
-        super(keyword);
+        this.keyword = keyword;
+    }
+
+    @Override
+    public String toString() {
+        return keyword;
     }
 }

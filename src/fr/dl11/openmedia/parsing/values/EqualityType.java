@@ -1,15 +1,20 @@
 package fr.dl11.openmedia.parsing.values;
 
-import fr.dl11.openmedia.parsing.AbstractToken;
+public enum EqualityType {
+    kEqual("égal à"),
+    kControl("contrôle"),
+    kParticipate("participe"),
+    kGreaterThan("supérieur à"),
+    kLessThan("inférieur à");
 
-public class EqualityType extends AbstractToken {
-    public static final EqualityType kEqual = new EqualityType("égal à");
-    public static final EqualityType kControl = new EqualityType("contrôle");
-    public static final EqualityType kParticipate = new EqualityType("participe");
-    public static final EqualityType kGreaterThan = new EqualityType("supérieur à");
-    public static final EqualityType kLessThan = new EqualityType("inférieur à");
+    private final String keyword;
 
     EqualityType(String keyword) {
-        super(keyword);
+        this.keyword = keyword;
+    }
+
+    @Override
+    public String toString() {
+        return keyword;
     }
 }
