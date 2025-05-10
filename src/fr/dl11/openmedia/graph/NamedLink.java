@@ -1,8 +1,8 @@
 package fr.dl11.openmedia.graph;
 
-import fr.dl11.openmedia.common.TaggedElement;
+import fr.dl11.openmedia.common.Identifiable;
 
-public class NamedLink extends SimpleLink implements TaggedElement {
+public class NamedLink extends SimpleLink implements Identifiable {
     private final String value;
 
     public NamedLink(AbsNode source, AbsNode target, String value) {
@@ -11,7 +11,7 @@ public class NamedLink extends SimpleLink implements TaggedElement {
     }
 
     @Override
-    public String getTag() {
+    public String getId() {
         return value;
     }
 

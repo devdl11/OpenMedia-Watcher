@@ -5,16 +5,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PersonData extends BaseData {
+public class PersonData {
+    private final String name;
     private final Map<Year, PersonNewsData> newsData;
 
+    PersonData() {
+        name = null;
+        newsData = new HashMap<>();
+    }
+
     public PersonData(String name) {
-        super(name);
+        this.name = name;
         newsData = new HashMap<>();
     }
 
     public PersonData(String name, Map<Year, PersonNewsData> newsData) {
-        super(name);
+        this.name = name;
         this.newsData = newsData;
     }
 
