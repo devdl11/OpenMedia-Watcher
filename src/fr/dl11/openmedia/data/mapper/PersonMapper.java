@@ -1,12 +1,11 @@
 package fr.dl11.openmedia.data.mapper;
 
-import fr.dl11.openmedia.data.persons.PersonData;
-import fr.dl11.openmedia.data.persons.PersonNewsData;
+import fr.dl11.openmedia.data.person.PersonData;
+import fr.dl11.openmedia.data.person.PersonNewsData;
 import fr.dl11.openmedia.datasource.data.DataRecord;
 import fr.dl11.openmedia.datasource.data.FieldData;
 import fr.dl11.openmedia.datasource.mappers.IDataMapper;
 
-import java.lang.reflect.Array;
 import java.time.Year;
 import java.util.*;
 
@@ -80,8 +79,6 @@ public class PersonMapper implements IDataMapper<PersonData> {
         for (Map.Entry<Integer, PersonNewsData> entry : newsData.entrySet()) {
             personData.addNewsData(entry.getValue());
         }
-
-        System.out.println(personData);
 
         return personData;
     }

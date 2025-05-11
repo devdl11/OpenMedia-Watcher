@@ -21,12 +21,32 @@ public class OrganizationOrganizationLink {
     @BindToKey(key = "commentaire", parser = StringParser.class)
     public final String comment;
 
-    OrganizationOrganizationLink() {
+    public OrganizationOrganizationLink() {
         this.origin = null;
         this.equalityType = null;
         this.value = null;
         this.target = null;
         this.comment = null;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public EqualityType getEqualityType() {
+        return equalityType;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     @Override

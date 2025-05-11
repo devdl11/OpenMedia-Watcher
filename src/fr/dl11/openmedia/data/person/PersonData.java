@@ -1,4 +1,4 @@
-package fr.dl11.openmedia.data.persons;
+package fr.dl11.openmedia.data.person;
 
 import java.time.Year;
 import java.util.Collection;
@@ -22,6 +22,10 @@ public class PersonData {
     public PersonData(String name, Map<Year, PersonNewsData> newsData) {
         this.name = name;
         this.newsData = newsData;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void addNewsData(PersonNewsData data) {

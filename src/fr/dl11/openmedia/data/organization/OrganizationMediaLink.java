@@ -18,11 +18,27 @@ public class OrganizationMediaLink {
     @BindToKey(key = "cible", parser = StringParser.class)
     private final String target;
 
-    OrganizationMediaLink() {
+    public OrganizationMediaLink() {
         this.origin = null;
         this.equalityType = null;
         this.value = null;
         this.target = null;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public EqualityType getEqualityType() {
+        return equalityType;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getTarget() {
+        return target;
     }
 
     @Override

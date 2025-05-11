@@ -1,24 +1,30 @@
 package fr.dl11.openmedia.datasource;
 
+import fr.dl11.openmedia.common.events.NewRawDataEvent;
+import fr.dl11.openmedia.core.EventBus;
 import fr.dl11.openmedia.datasource.data.DataRecord;
 import fr.dl11.openmedia.datasource.data.RawData;
 import fr.dl11.openmedia.datasource.data.SourcedRawData;
+import fr.dl11.openmedia.datasource.events.NewIncomingDataEvent;
 import fr.dl11.openmedia.datasource.exceptions.ParsingException;
 import fr.dl11.openmedia.datasource.mappers.IDataMapper;
 import fr.dl11.openmedia.datasource.mappers.SourcedDataMapper;
 import fr.dl11.openmedia.datasource.parsers.IDataParser;
+import fr.dl11.openmedia.events.EventHandler;
 import fr.dl11.openmedia.exceptions.FailedEventHandling;
 import fr.dl11.openmedia.types.DataType;
 
 import java.util.*;
 
-public class DataPipelineManager implements IRawDataHandler {
+public class DataPipelineManager implements EventHandler<NewRawDataEvent> {
     private final Map<DataType, List<IDataParser>> parsers;
     private final List<IDataMapper<?>> mappers;
 
     public DataPipelineManager() {
         this.parsers = new HashMap<>();
         this.mappers = new ArrayList<>();
+
+        EventBus.getInstance().subscribe(NewRawDataEvent.class, this);
     }
 
     public void addParser(DataType dataType, IDataParser parser) {
@@ -42,12 +48,17 @@ public class DataPipelineManager implements IRawDataHandler {
     }
 
     @Override
-    public void handleData(RawData rawData) throws FailedEventHandling {
+    public void handleEvent(NewRawDataEvent event) throws FailedEventHandling {
+        assert event != null && event.getRawData() != null;
+
+        event.consume();
+
         Collection<DataRecord> parsedData = null;
+        RawData rawData = event.getRawData();
 
         for (List<IDataParser> parser : parsers.values()) {
             for (IDataParser p : parser) {
-                if (!p.canParse(rawData))
+                if (!p.canParse(event.getRawData()))
                     continue;
 
                 try {
@@ -82,7 +93,7 @@ public class DataPipelineManager implements IRawDataHandler {
                     throw new IllegalArgumentException("Mapper returned null for record: " + record);
                 }
 
-                System.out.println(output);
+                EventBus.getInstance().publish(new NewIncomingDataEvent(output));
                 break;
 
             }

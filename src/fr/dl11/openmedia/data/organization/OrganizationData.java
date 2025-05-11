@@ -5,14 +5,22 @@ import fr.dl11.openmedia.datasource.parsers.elements.StringParser;
 
 public class OrganizationData {
     @BindToKey(key = "nom", parser = StringParser.class)
-    public final String name;
+    private final String name;
 
     @BindToKey(key = "commentaire", parser = StringParser.class)
-    public final String comment;
+    private final String comment;
 
-    OrganizationData() {
+    public OrganizationData() {
         name = null;
         comment = null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     @Override

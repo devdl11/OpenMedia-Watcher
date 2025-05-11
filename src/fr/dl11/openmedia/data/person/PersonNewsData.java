@@ -1,4 +1,4 @@
-package fr.dl11.openmedia.data.persons;
+package fr.dl11.openmedia.data.person;
 
 import java.time.Year;
 import java.util.Optional;

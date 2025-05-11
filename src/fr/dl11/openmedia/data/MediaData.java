@@ -14,27 +14,51 @@ public class MediaData {
     private final String name;
 
     @BindToKey(key = "type", parser = EnumParser.class)
-    public final NewsType newsType;
+    private final NewsType newsType;
 
     @BindToKey(key = "periodicite", parser = EnumParser.class)
-    public final PeriodicityType periodicity;
+    private final PeriodicityType periodicity;
 
     @BindToKey(key = "echelle", parser = EnumParser.class)
-    public final RegionType region;
+    private final RegionType region;
 
     @BindToKey(key = "prix", parser = EnumParser.class)
-    public final BillingType billing;
+    private final BillingType billing;
 
     @BindToKey(key = "disparu", parser = BooleanParser.class)
-    public final boolean disappeared;
+    private final boolean disappeared;
 
-    MediaData() {
+    public MediaData() {
         newsType = null;
         periodicity = null;
         region = null;
         billing = null;
         disappeared = false;
         name = null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public NewsType getNewsType() {
+        return newsType;
+    }
+
+    public PeriodicityType getPeriodicity() {
+        return periodicity;
+    }
+
+    public RegionType getRegion() {
+        return region;
+    }
+
+    public BillingType getBilling() {
+        return billing;
+    }
+
+    public boolean isDisappeared() {
+        return disappeared;
     }
 
     @Override
