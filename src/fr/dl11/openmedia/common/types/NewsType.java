@@ -6,7 +6,7 @@ public enum NewsType implements WithDefault<NewsType> {
     kTV("Télévision"),
     kRadio("Radio"),
     kWeb("Site"),
-    kGen("Presse (généraliste politique économique)"),
+    kGen("Presse (généraliste  politique  économique)"),
     kNone("Aucun");
 
     private final String keyword;
