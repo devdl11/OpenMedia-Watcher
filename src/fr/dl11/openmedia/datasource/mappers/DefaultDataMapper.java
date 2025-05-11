@@ -10,13 +10,44 @@ import fr.dl11.openmedia.datasource.parsers.elements.IElementParser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Default implementation of the {@link IDataMapper} interface.
+ *
+ * <p>The {@code DefaultDataMapper} class provides functionality to map data records
+ * to objects of a specified class type. It uses annotations to bind fields in the
+ * class to keys in the data record and supports custom parsers for field values.
+ *
+ * @param <T> The type of object to map the data to.
+ */
 public class DefaultDataMapper<T> implements IDataMapper<T> {
+
+    /**
+     * The class type to map the data to.
+     */
     private final Class<T> clazz;
+
+    /**
+     * A map of field names (keys) to their corresponding {@link Field} objects in the class.
+     */
     private final Map<String, Field> annotatedFields;
+
+    /**
+     * A map of field names (keys) to their corresponding element parsers.
+     */
     private final Map<String, IElementParser<?>> elementParsers;
 
+    /**
+     * Creates an instance of an {@link EnumParser} for a given enum class.
+     *
+     * @param enumClass The enum class for which the parser is created.
+     * @param <E>       The type of the enum.
+     * @return An instance of {@link EnumParser}.
+     * @throws IllegalArgumentException If the provided class is not an enum type.
+     */
     @SuppressWarnings("unchecked")
     private <E extends Enum<E>> IElementParser<E> createEnumParserInstance(Class<?> enumClass) {
         if (!enumClass.isEnum()) {
@@ -47,11 +78,16 @@ public class DefaultDataMapper<T> implements IDataMapper<T> {
 
         try {
             return new EnumParser<>(specificEnumClass, defaultValue);
-        } catch (Exception e) { // Catch whatever EnumParser constructor might throw
+        } catch (Exception e) {
             throw new RuntimeException("Failed to instantiate EnumParser for " + specificEnumClass.getName(), e);
         }
     }
 
+    /**
+     * Constructs a new {@code DefaultDataMapper} for the specified class type.
+     *
+     * @param clazz The class type to map the data to.
+     */
     @SuppressWarnings("rawtypes")
     public DefaultDataMapper(Class<T> clazz) {
         this.clazz = clazz;
@@ -73,7 +109,7 @@ public class DefaultDataMapper<T> implements IDataMapper<T> {
                     IElementParser<?> parserInstance;
 
                     try {
-                        if (parserClass == EnumParser.class) { // Assuming EnumParser is your class for this
+                        if (parserClass == EnumParser.class) {
                             if (!fieldType.isEnum()) {
                                 throw new IllegalArgumentException("Field '" + field.getName() + "' in class '" + this.clazz.getSimpleName() +
                                         "' is annotated with EnumParser but is not an Enum type.");
@@ -84,7 +120,7 @@ public class DefaultDataMapper<T> implements IDataMapper<T> {
                             parserInstance = parserClass.getDeclaredConstructor().newInstance();
                         }
                         elementParsers.put(fieldKey, parserInstance);
-                    } catch (NoSuchMethodException e) { // For non-EnumParser default constructors
+                    } catch (NoSuchMethodException e) {
                         throw new RuntimeException("Parser class " + parserClass.getName() +
                                 " for field '" + field.getName() + "' in class '" + this.clazz.getSimpleName() +
                                 "' is missing a no-argument constructor.");
@@ -97,13 +133,25 @@ public class DefaultDataMapper<T> implements IDataMapper<T> {
                 });
     }
 
-
+    /**
+     * Checks if the given {@link DataRecord} can be mapped to an object of type {@code T}.
+     *
+     * @param record The data record to check.
+     * @return {@code true} if the record can be mapped, {@code false} otherwise.
+     */
     @Override
     public boolean canMap(DataRecord record) {
         return record != null && record.fields().size() == annotatedFields.size() &&
                 record.fields().stream().allMatch(field -> annotatedFields.containsKey(field.name().toLowerCase()));
     }
 
+    /**
+     * Maps the given {@link DataRecord} to an object of type {@code T}.
+     *
+     * @param record The data record to map.
+     * @return An object of type {@code T} mapped from the data record.
+     * @throws MatchException If the mapping fails.
+     */
     @Override
     public T mapData(DataRecord record) throws MatchException {
         assert canMap(record);
@@ -134,7 +182,6 @@ public class DefaultDataMapper<T> implements IDataMapper<T> {
         } catch (ElementParsingException e) {
             throw new MatchException("Failed to parse element: " + e.getMessage(), e.getCause());
         } catch (Exception e) {
-            // Catch any other exceptions that might occur
             throw new RuntimeException("Failed to set field value: " + e.getMessage(), e);
         }
     }
