@@ -3,14 +3,10 @@ package fr.dl11.openmedia.datasource.mappers;
 import fr.dl11.openmedia.common.utils.WithDefault;
 import fr.dl11.openmedia.datasource.binding.BindToKey;
 import fr.dl11.openmedia.datasource.data.DataRecord;
-import fr.dl11.openmedia.datasource.data.RawData;
 import fr.dl11.openmedia.datasource.exceptions.ElementParsingException;
-import fr.dl11.openmedia.datasource.parsers.IDataParser;
 import fr.dl11.openmedia.datasource.parsers.elements.EnumParser;
 import fr.dl11.openmedia.datasource.parsers.elements.IElementParser;
-import fr.dl11.openmedia.types.DataType;
 
-import java.io.InvalidObjectException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
