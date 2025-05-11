@@ -1,4 +1,4 @@
-package fr.dl11.openmedia.data;
+package fr.dl11.openmedia.data.persons;
 
 import java.time.Year;
 import java.util.Collection;
@@ -25,10 +25,18 @@ public class PersonData {
     }
 
     public void addNewsData(PersonNewsData data) {
-        newsData.put(data.year(), data);
+        newsData.put(data.getYear(), data);
     }
 
     public Collection<PersonNewsData> getNewsData() {
         return newsData.values();
+    }
+
+    @Override
+    public String toString() {
+        return "PersonData{" +
+                "name='" + name + '\'' +
+                ", newsData=" + newsData +
+                '}';
     }
 }

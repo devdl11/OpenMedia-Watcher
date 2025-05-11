@@ -1,11 +1,11 @@
-package fr.dl11.openmedia.data;
+package fr.dl11.openmedia.data.persons;
 
 import fr.dl11.openmedia.common.types.EqualityType;
 import fr.dl11.openmedia.datasource.binding.BindToKey;
 import fr.dl11.openmedia.datasource.parsers.elements.EnumParser;
 import fr.dl11.openmedia.datasource.parsers.elements.StringParser;
 
-public class OrganizationMediaLink {
+public class PersonOrganizationLink {
     @BindToKey(key = "origine", parser = StringParser.class)
     private final String origin;
 
@@ -18,10 +18,14 @@ public class OrganizationMediaLink {
     @BindToKey(key = "cible", parser = StringParser.class)
     private final String target;
 
-    OrganizationMediaLink() {
+    @BindToKey(key = "commentaire", parser = StringParser.class)
+    private final String comment;
+
+    PersonOrganizationLink() {
         this.origin = null;
         this.equalityType = null;
         this.value = null;
         this.target = null;
+        this.comment = null;
     }
 }

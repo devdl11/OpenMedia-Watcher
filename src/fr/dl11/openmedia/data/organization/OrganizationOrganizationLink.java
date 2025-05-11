@@ -1,27 +1,31 @@
-package fr.dl11.openmedia.data;
+package fr.dl11.openmedia.data.organization;
 
 import fr.dl11.openmedia.common.types.EqualityType;
 import fr.dl11.openmedia.datasource.binding.BindToKey;
 import fr.dl11.openmedia.datasource.parsers.elements.EnumParser;
 import fr.dl11.openmedia.datasource.parsers.elements.StringParser;
 
-public class PersonMediaLinkData {
+public class OrganizationOrganizationLink {
     @BindToKey(key = "origine", parser = StringParser.class)
-    private final String origin;
+    public final String origin;
 
     @BindToKey(key = "qualificatif", parser = EnumParser.class)
-    private final EqualityType equalityType;
+    public final EqualityType equalityType;
 
     @BindToKey(key = "valeur", parser = StringParser.class)
-    private final String value;
+    public final String value;
 
     @BindToKey(key = "cible", parser = StringParser.class)
-    private final String target;
+    public final String target;
 
-    PersonMediaLinkData() {
+    @BindToKey(key = "commentaire", parser = StringParser.class)
+    public final String comment;
+
+    OrganizationOrganizationLink() {
         this.origin = null;
         this.equalityType = null;
         this.value = null;
         this.target = null;
+        this.comment = null;
     }
 }

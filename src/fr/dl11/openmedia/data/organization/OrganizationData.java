@@ -1,4 +1,4 @@
-package fr.dl11.openmedia.data;
+package fr.dl11.openmedia.data.organization;
 
 import fr.dl11.openmedia.datasource.binding.BindToKey;
 import fr.dl11.openmedia.datasource.parsers.elements.StringParser;
