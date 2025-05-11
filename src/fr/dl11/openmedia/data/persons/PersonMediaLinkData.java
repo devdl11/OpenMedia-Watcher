@@ -24,4 +24,14 @@ public class PersonMediaLinkData {
         this.value = null;
         this.target = null;
     }
+
+    @Override
+    public String toString() {
+        return "PersonMediaLinkData{" +
+                "origin='" + origin + '\'' +
+                ", equalityType=" + equalityType +
+                ", value='" + value + '\'' +
+                ", target='" + target + '\'' +
+                '}';
+    }
 }

@@ -14,4 +14,12 @@ public class OrganizationData {
         name = null;
         comment = null;
     }
+
+    @Override
+    public String toString() {
+        return "OrganizationData{" +
+                "name='" + name + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

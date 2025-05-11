@@ -28,4 +28,15 @@ public class OrganizationOrganizationLink {
         this.target = null;
         this.comment = null;
     }
+
+    @Override
+    public String toString() {
+        return "OrganizationOrganizationLink{" +
+                "origin='" + origin + '\'' +
+                ", equalityType=" + equalityType +
+                ", value='" + value + '\'' +
+                ", target='" + target + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

@@ -24,4 +24,14 @@ public class OrganizationMediaLink {
         this.value = null;
         this.target = null;
     }
+
+    @Override
+    public String toString() {
+        return "OrganizationMediaLink{" +
+                "origin='" + origin + '\'' +
+                ", equalityType=" + equalityType +
+                ", value='" + value + '\'' +
+                ", target='" + target + '\'' +
+                '}';
+    }
 }

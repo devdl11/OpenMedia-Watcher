@@ -28,4 +28,15 @@ public class PersonOrganizationLink {
         this.target = null;
         this.comment = null;
     }
+
+    @Override
+    public String toString() {
+        return "PersonOrganizationLink{" +
+                "origin='" + origin + '\'' +
+                ", equalityType=" + equalityType +
+                ", value='" + value + '\'' +
+                ", target='" + target + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }
