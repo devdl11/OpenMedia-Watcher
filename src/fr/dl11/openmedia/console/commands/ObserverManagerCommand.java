@@ -11,14 +11,30 @@ import fr.dl11.openmedia.observers.specialized.PublicationMediaObserver;
 import fr.dl11.openmedia.observers.specialized.OrganizationMediaLinkTargetObserver;
 import fr.dl11.openmedia.observers.specialized.PersonMediaLinkTargetObserver;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Command class for managing observers in the console application.
+ *
+ * <p>This class provides functionality to list active observers, create new specialized
+ * observers, and remove existing observers. It interacts with the {@link Console} and
+ * {@link DataGraphManager} to perform these operations.
+ */
 public class ObserverManagerCommand implements ICommand {
 
+    /**
+     * Executes the Observer Manager command.
+     *
+     * <p>This method displays a menu to the user, allowing them to list active observers,
+     * create new specialized observers, or remove existing observers.
+     *
+     * @param args   Command-line arguments (not used in this implementation).
+     * @param graph  The {@link DataGraphManager} instance for managing data graphs.
+     * @param console The {@link Console} instance for user interaction.
+     */
     @Override
     public void execute(String[] args, DataGraphManager graph, Console console) {
         while (true) {
@@ -44,8 +60,10 @@ public class ObserverManagerCommand implements ICommand {
 
     /**
      * Lists all currently active observers.
-     * Assumes BaseObserver has getName(), getId(), getDescription(), and isSubscribed() methods.
-     * @param console The console instance containing the list of active observers.
+     *
+     * <p>Assumes {@link BaseObserver} has methods such as getObserverName().
+     *
+     * @param console The {@link Console} instance containing the list of active observers.
      */
     private void listActiveObservers(Console console) {
         System.out.println("\n--- Active Observers ---");
@@ -61,7 +79,8 @@ public class ObserverManagerCommand implements ICommand {
 
     /**
      * Allows the user to remove an observer from the active list.
-     * @param console The console instance.
+     *
+     * @param console The {@link Console} instance.
      */
     private void removeObserver(Console console) {
         System.out.println("\n--- Remove Observer ---");
@@ -84,7 +103,6 @@ public class ObserverManagerCommand implements ICommand {
             return;
         }
         if (choice > 0 && choice <= console.activeObservers.size()) {
-            // Remove from list and call unsubscribe
             BaseObserver observerToRemove = console.activeObservers.remove(choice - 1);
             observerToRemove.unsubscribe();
             System.out.println("Observer '" + observerToRemove.getObserverName() + "' removed and unsubscribed.");
@@ -95,8 +113,9 @@ public class ObserverManagerCommand implements ICommand {
 
     /**
      * Guides the user through creating a new specialized observer.
-     * @param graph The DataGraphManager for context (e.g., selecting media).
-     * @param console The console instance.
+     *
+     * @param graph  The {@link DataGraphManager} for context (e.g., selecting media).
+     * @param console The {@link Console} instance.
      */
     private void createNewSpecializedObserver(DataGraphManager graph, Console console) {
         System.out.println("\n--- Create New Specialized Observer ---");
@@ -106,7 +125,6 @@ public class ObserverManagerCommand implements ICommand {
             System.out.println("Observer name cannot be empty.");
             return;
         }
-        // Check for name uniqueness
         if (console.activeObservers != null && console.activeObservers.stream().anyMatch(o -> o.getObserverName().equalsIgnoreCase(observerName))) {
             System.out.println("An observer with this name already exists. Please choose a different name.");
             return;
@@ -149,8 +167,13 @@ public class ObserverManagerCommand implements ICommand {
         }
     }
 
-    // --- Configuration methods for each specialized observer ---
-
+    /**
+     * Configures a {@link PublicationContentObserver}.
+     *
+     * @param observerName The name of the observer.
+     * @param console      The {@link Console} instance.
+     * @return A configured {@link PublicationContentObserver}, or null if configuration fails.
+     */
     private PublicationContentObserver configurePublicationContentObserver(String observerName, Console console) {
         System.out.print("Enter the content string to watch for in new publications: ");
         String contentToWatch = console.scanner.nextLine().trim();
@@ -162,6 +185,14 @@ public class ObserverManagerCommand implements ICommand {
         return new PublicationContentObserver(observerName, contentToWatch);
     }
 
+    /**
+     * Configures a {@link PublicationMediaObserver}.
+     *
+     * @param observerName The name of the observer.
+     * @param graph        The {@link DataGraphManager} instance.
+     * @param console      The {@link Console} instance.
+     * @return A configured {@link PublicationMediaObserver}, or null if configuration fails.
+     */
     private PublicationMediaObserver configurePublicationMediaObserver(String observerName, DataGraphManager graph, Console console) {
         MediaModel selectedMedia = selectMedia(graph, console.scanner, "Select the Media to watch for publications from:");
         if (selectedMedia == null) {
@@ -172,6 +203,14 @@ public class ObserverManagerCommand implements ICommand {
         return new PublicationMediaObserver(observerName, selectedMedia.getMediaData().getName());
     }
 
+    /**
+     * Configures an {@link OrganizationMediaLinkTargetObserver}.
+     *
+     * @param observerName The name of the observer.
+     * @param graph        The {@link DataGraphManager} instance.
+     * @param console      The {@link Console} instance.
+     * @return A configured {@link OrganizationMediaLinkTargetObserver}, or null if configuration fails.
+     */
     private OrganizationMediaLinkTargetObserver configureOrgMediaLinkTargetObserver(String observerName, DataGraphManager graph, Console console) {
         MediaModel targetMedia = selectMedia(graph, console.scanner, "Select the Target Media for Organization-Media links:");
         if (targetMedia == null) {
@@ -182,6 +221,14 @@ public class ObserverManagerCommand implements ICommand {
         return new OrganizationMediaLinkTargetObserver(observerName, targetMedia.getMediaData().getName());
     }
 
+    /**
+     * Configures a {@link PersonMediaLinkTargetObserver}.
+     *
+     * @param observerName The name of the observer.
+     * @param graph        The {@link DataGraphManager} instance.
+     * @param console      The {@link Console} instance.
+     * @return A configured {@link PersonMediaLinkTargetObserver}, or null if configuration fails.
+     */
     private PersonMediaLinkTargetObserver configurePersonMediaLinkTargetObserver(String observerName, DataGraphManager graph, Console console) {
         MediaModel targetMedia = selectMedia(graph, console.scanner, "Select the Target Media for Person-Media links:");
         if (targetMedia == null) {
@@ -192,13 +239,13 @@ public class ObserverManagerCommand implements ICommand {
         return new PersonMediaLinkTargetObserver(observerName, targetMedia.getMediaData().getName());
     }
 
-
     /**
      * Helper method to allow the user to select a Media entity.
-     * @param graph DataGraphManager to fetch media from.
-     * @param scanner Scanner for user input.
+     *
+     * @param graph  The {@link DataGraphManager} to fetch media from.
+     * @param scanner The {@link Scanner} for user input.
      * @param prompt The message to display to the user.
-     * @return The selected MediaModel, or null if selection is cancelled or invalid.
+     * @return The selected {@link MediaModel}, or null if selection is cancelled or invalid.
      */
     private MediaModel selectMedia(DataGraphManager graph, Scanner scanner, String prompt) {
         List<MediaModel> medias = new ArrayList<>(graph.getAllMedias());

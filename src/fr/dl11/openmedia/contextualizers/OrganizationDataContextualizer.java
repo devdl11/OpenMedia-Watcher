@@ -11,12 +11,45 @@ import fr.dl11.openmedia.exceptions.FailedEventHandling;
 import fr.dl11.openmedia.models.MediaModel;
 import fr.dl11.openmedia.models.OrganizationModel;
 
+/**
+ * Contextualizer for handling organization-related data events.
+ *
+ * <p>This class extends {@link GraphDataContextualizers} and subscribes to
+ * {@link NewIncomingDataEvent} events. It processes incoming data related to
+ * organizations, such as {@link OrganizationData}, {@link OrganizationMediaLink},
+ * and {@link OrganizationOrganizationLink}, and publishes corresponding events
+ * to the {@link EventBus}.
+ */
 public class OrganizationDataContextualizer extends GraphDataContextualizers {
+
+    /**
+     * Constructs a new OrganizationDataContextualizer.
+     *
+     * <p>Subscribes to {@link NewIncomingDataEvent} events using the {@link EventBus}.
+     *
+     * @param graphManager The {@link DataGraphManager} instance used for managing the data graph.
+     */
     public OrganizationDataContextualizer(DataGraphManager graphManager) {
         super(graphManager);
         EventBus.getInstance().subscribe(NewIncomingDataEvent.class, this);
     }
 
+    /**
+     * Handles a {@link NewIncomingDataEvent}.
+     *
+     * <p>Processes the event based on the type of data it contains:
+     * <ul>
+     *     <li>If the data is of type {@link OrganizationData}, it publishes a {@link NewOrganizationEvent}.</li>
+     *     <li>If the data is of type {@link OrganizationMediaLink}, it determines whether to publish
+     *     a {@link NewOrganizationMediaLinkEvent} or an {@link UpdateOrganizationMediaLinkEvent}.</li>
+     *     <li>If the data is of type {@link OrganizationOrganizationLink}, it determines whether to publish
+     *     a {@link NewOrganizationOrganizationLinkEvent} or an {@link UpdateOrganizationOrganizationLinkEvent}.</li>
+     *     <li>Ignores the event if the data type is unrecognized.</li>
+     * </ul>
+     *
+     * @param event The {@link NewIncomingDataEvent} to handle.
+     * @throws FailedEventHandling If an error occurs while handling the event.
+     */
     @Override
     public void handleEvent(NewIncomingDataEvent event) throws FailedEventHandling {
         assert event != null && event.data != null;
@@ -27,7 +60,6 @@ public class OrganizationDataContextualizer extends GraphDataContextualizers {
         switch (data) {
             case OrganizationData organizationData -> {
                 event.consume();
-
                 bus.publish(new NewOrganizationEvent(organizationData, graphManager));
             }
             case OrganizationMediaLink organizationMediaLink -> {
@@ -65,6 +97,5 @@ public class OrganizationDataContextualizer extends GraphDataContextualizers {
             default -> {
             }
         }
-
     }
 }

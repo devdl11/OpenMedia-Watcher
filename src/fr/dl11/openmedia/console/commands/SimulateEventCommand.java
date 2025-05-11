@@ -21,14 +21,35 @@ import fr.dl11.openmedia.models.MediaModel;
 import fr.dl11.openmedia.models.OrganizationModel;
 import fr.dl11.openmedia.models.PersonModel;
 
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Implements the {@link ICommand} interface to provide a console command
+ * for simulating the creation and publication of various data events within the system.
+ * This command allows users to interactively generate new data entities (like publications,
+ * media, persons, organizations) and links between them, which are then published
+ * to the {@link EventBus}.
+ * <p>
+ * The command guides the user through a menu-driven interface to select the type
+ * of event to simulate and then prompts for the necessary information to construct
+ * the event data. It utilizes reflection via the {@code setFinalField} method to
+ * populate data objects that may have private final fields and no direct setters.
+ * </p>
+ */
 public class SimulateEventCommand implements ICommand {
 
+    /**
+     * Executes the simulate event command.
+     * Presents a menu to the user for selecting which type of event to simulate.
+     * Based on the user's choice, it delegates to a specific simulation method.
+     *
+     * @param args    Command line arguments (not used by this command).
+     * @param graph   The {@link DataGraphManager} instance, used for context (e.g., selecting existing entities).
+     * @param console The {@link Console} instance, providing access to the scanner for user input.
+     */
     @Override
     public void execute(String[] args, DataGraphManager graph, Console console) {
         System.out.println("Select an event type to simulate:");
@@ -53,11 +74,23 @@ public class SimulateEventCommand implements ICommand {
             case "6" -> simulatePersonOrganizationLink(graph, console);
             case "7" -> simulateOrganizationMediaLink(graph, console);
             case "8" -> simulateOrganizationOrganizationLink(graph, console);
-            case "0" -> {return;}
+            case "0" -> {
+                return;
+            } // Return to the main console loop
             default -> System.out.println("Invalid choice. Please try again.");
         }
     }
 
+    /**
+     * Prompts the user to select a value from a given Enum type.
+     * Displays the available enum constants and re-prompts on invalid input.
+     *
+     * @param scanner   The {@link Scanner} instance for reading user input.
+     * @param enumClass The {@link Class} object of the Enum from which to select.
+     * @param prompt    The message to display to the user before listing enum options.
+     * @param <T>       The Enum type.
+     * @return The Enum constant selected by the user.
+     */
     private <T extends Enum<T>> T selectEnum(Scanner scanner, Class<T> enumClass, String prompt) {
         System.out.println(prompt);
         T[] enumConstants = enumClass.getEnumConstants();
@@ -68,9 +101,7 @@ public class SimulateEventCommand implements ICommand {
         int choice = -1;
         try {
             choice = Integer.parseInt(scanner.nextLine()) - 1;
-        } catch (NumberFormatException e) {
-            // Handled below
-        }
+        } catch (NumberFormatException e) {}
         if (choice >= 0 && choice < enumConstants.length) {
             return enumConstants[choice];
         } else {
@@ -79,6 +110,15 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
+    /**
+     * Prompts the user to select an existing {@link MediaModel} from the {@link DataGraphManager}.
+     * Displays a list of available media and re-prompts on invalid input.
+     *
+     * @param graph   The {@link DataGraphManager} to fetch media from.
+     * @param scanner The {@link Scanner} for user input.
+     * @param prompt  The message to display to the user.
+     * @return The selected {@link MediaModel}, or {@code null} if no media are available.
+     */
     private MediaModel selectMedia(DataGraphManager graph, Scanner scanner, String prompt) {
         List<MediaModel> medias = new ArrayList<>(graph.getAllMedias());
         if (medias.isEmpty()) {
@@ -93,17 +133,24 @@ public class SimulateEventCommand implements ICommand {
         int choice = -1;
         try {
             choice = Integer.parseInt(scanner.nextLine()) - 1;
-        } catch (NumberFormatException e) {
-            //
-        }
+        } catch (NumberFormatException e) {}
         if (choice >= 0 && choice < medias.size()) {
             return medias.get(choice);
         } else {
             System.out.println("Invalid selection. Please try again.");
-            return selectMedia(graph, scanner, prompt);
+            return selectMedia(graph, scanner, prompt); // Recursive call
         }
     }
 
+    /**
+     * Prompts the user to select an existing {@link PersonModel} from the {@link DataGraphManager}.
+     * Displays a list of available persons and re-prompts on invalid input.
+     *
+     * @param graph   The {@link DataGraphManager} to fetch persons from.
+     * @param scanner The {@link Scanner} for user input.
+     * @param prompt  The message to display to the user.
+     * @return The selected {@link PersonModel}, or {@code null} if no persons are available.
+     */
     private PersonModel selectPerson(DataGraphManager graph, Scanner scanner, String prompt) {
         List<PersonModel> persons = new ArrayList<>(graph.getAllPersons());
         if (persons.isEmpty()) {
@@ -118,17 +165,24 @@ public class SimulateEventCommand implements ICommand {
         int choice = -1;
         try {
             choice = Integer.parseInt(scanner.nextLine()) - 1;
-        } catch (NumberFormatException e) {
-            // Handled below
-        }
+        } catch (NumberFormatException e) {}
         if (choice >= 0 && choice < persons.size()) {
             return persons.get(choice);
         } else {
             System.out.println("Invalid selection. Please try again.");
-            return selectPerson(graph, scanner, prompt);
+            return selectPerson(graph, scanner, prompt); // Recursive call
         }
     }
 
+    /**
+     * Prompts the user to select an existing {@link OrganizationModel} from the {@link DataGraphManager}.
+     * Displays a list of available organizations and re-prompts on invalid input.
+     *
+     * @param graph   The {@link DataGraphManager} to fetch organizations from.
+     * @param scanner The {@link Scanner} for user input.
+     * @param prompt  The message to display to the user.
+     * @return The selected {@link OrganizationModel}, or {@code null} if no organizations are available.
+     */
     private OrganizationModel selectOrganization(DataGraphManager graph, Scanner scanner, String prompt) {
         List<OrganizationModel> organizations = new ArrayList<>(graph.getAllOrganizations());
         if (organizations.isEmpty()) {
@@ -143,17 +197,21 @@ public class SimulateEventCommand implements ICommand {
         int choice = -1;
         try {
             choice = Integer.parseInt(scanner.nextLine()) - 1;
-        } catch (NumberFormatException e) {
-            // Handled below
-        }
+        } catch (NumberFormatException e) {}
         if (choice >= 0 && choice < organizations.size()) {
             return organizations.get(choice);
         } else {
             System.out.println("Invalid selection. Please try again.");
-            return selectOrganization(graph, scanner, prompt);
+            return selectOrganization(graph, scanner, prompt); // Recursive call
         }
     }
 
+    /**
+     * Reads multi-line text input from the user until they type "stop" on a new line.
+     *
+     * @param scanner The {@link Scanner} instance for reading user input.
+     * @return A single string containing all lines of input, trimmed, with newline characters preserved between lines.
+     */
     private String readMultiLineContent(Scanner scanner) {
         System.out.println("Enter publication content" + " (type 'stop' on a new line to finish):");
         StringBuilder contentBuilder = new StringBuilder();
@@ -164,6 +222,15 @@ public class SimulateEventCommand implements ICommand {
         return contentBuilder.toString().trim();
     }
 
+    /**
+     * Simulates the creation of a new publication (e.g., article, interview).
+     * Prompts the user for title, type, source media, author, and content.
+     * Creates a {@link PublicationData} object, populates it (using reflection for final fields),
+     * and publishes a {@link NewPublicationEvent}.
+     *
+     * @param graph   The {@link DataGraphManager} instance.
+     * @param console The {@link Console} instance.
+     */
     private void simulateNewPublication(DataGraphManager graph, Console console) {
         System.out.println("--- Simulating New Publication ---");
         Scanner scanner = console.scanner;
@@ -186,14 +253,12 @@ public class SimulateEventCommand implements ICommand {
         String content = readMultiLineContent(scanner);
 
         try {
-            // Using reflection to set private final fields, common in such data classes if no setters/constructors provided for all fields
             PublicationData publicationData = new PublicationData();
             setFinalField(publicationData, "title", title);
             setFinalField(publicationData, "type", publicationType);
             setFinalField(publicationData, "mediaName", mediaName);
             setFinalField(publicationData, "author", author);
             setFinalField(publicationData, "content", content);
-
 
             NewPublicationEvent event = new NewPublicationEvent(publicationData, graph);
             EventBus.getInstance().publish(event);
@@ -205,6 +270,15 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
+    /**
+     * Simulates the creation of a new media entity.
+     * Prompts the user for name, news type, periodicity, region, billing type, and disappeared status.
+     * Creates a {@link MediaData} object, populates it (using reflection for final fields),
+     * and publishes a {@link NewMediaEvent}.
+     *
+     * @param graph   The {@link DataGraphManager} instance.
+     * @param console The {@link Console} instance.
+     */
     private void simulateNewMedia(DataGraphManager graph, Console console) {
         System.out.println("--- Simulating New Media ---");
         Scanner scanner = console.scanner;
@@ -239,6 +313,15 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
+    /**
+     * Simulates the creation of a new person entity.
+     * Prompts the user for the person's name.
+     * Creates a {@link PersonData} object and publishes a {@link NewPersonEvent}.
+     * Note: Collection of detailed {@code PersonNewsData} is not implemented in this simplified version.
+     *
+     * @param graph   The {@link DataGraphManager} instance.
+     * @param console The {@link Console} instance.
+     */
     private void simulateNewPerson(DataGraphManager graph, Console console) {
         System.out.println("--- Simulating New Person ---");
         Scanner scanner = console.scanner;
@@ -247,7 +330,7 @@ public class SimulateEventCommand implements ICommand {
         String name = scanner.nextLine();
 
         try {
-            PersonData personData = new PersonData(name); // Assuming constructor that takes name
+            PersonData personData = new PersonData(name); // Assumes a constructor that accepts the name
 
             NewPersonEvent event = new NewPersonEvent(personData, graph);
             EventBus.getInstance().publish(event);
@@ -259,6 +342,15 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
+    /**
+     * Simulates the creation of a new organization entity.
+     * Prompts the user for the organization's name and an optional comment.
+     * Creates an {@link OrganizationData} object, populates it (using reflection for final fields),
+     * and publishes a {@link NewOrganizationEvent}.
+     *
+     * @param graph   The {@link DataGraphManager} instance.
+     * @param console The {@link Console} instance.
+     */
     private void simulateNewOrganization(DataGraphManager graph, Console console) {
         System.out.println("--- Simulating New Organization ---");
         Scanner scanner = console.scanner;
@@ -283,7 +375,16 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
-
+    /**
+     * Simulates the creation or update of a link between a Person and a Media entity.
+     * Prompts the user to select the source person, target media, equality type, and link value.
+     * Creates a {@link PersonMediaLinkData} object.
+     * Checks if the link already exists in the {@link DataGraphManager} to determine whether
+     * to publish a {@link NewPersonMediaLinkEvent} or an {@link UpdatePersonMediaLinkEvent}.
+     *
+     * @param graph   The {@link DataGraphManager} instance.
+     * @param console The {@link Console} instance.
+     */
     private void simulatePersonMediaLink(DataGraphManager graph, Console console) {
         System.out.println("--- Simulating Person-Media Link (New/Update) ---");
         Scanner scanner = console.scanner;
@@ -304,8 +405,7 @@ public class SimulateEventCommand implements ICommand {
             setFinalField(linkData, "equalityType", equalityType);
             setFinalField(linkData, "value", value);
 
-            // Check if link exists to decide between New and Update event
-            boolean linkExists = graph.hasPersonMediaLink(person, media); // You need to implement this in DataGraphManager
+            boolean linkExists = graph.hasPersonMediaLink(person, media);
 
             if (linkExists) {
                 UpdatePersonMediaLinkEvent event = new UpdatePersonMediaLinkEvent(linkData, graph);
@@ -322,6 +422,16 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
+    /**
+     * Simulates the creation or update of a link between a Person and an Organization entity.
+     * Prompts for source person, target organization, equality type, link value, and an optional comment.
+     * Creates a {@link PersonOrganizationLink} object.
+     * Checks for link existence to publish either a {@link NewPersonOrganizationLinkEvent}
+     * or an {@link UpdatePersonOrganizationLinkEvent}.
+     *
+     * @param graph   The {@link DataGraphManager} instance.
+     * @param console The {@link Console} instance.
+     */
     private void simulatePersonOrganizationLink(DataGraphManager graph, Console console) {
         System.out.println("--- Simulating Person-Organization Link (New/Update) ---");
         Scanner scanner = console.scanner;
@@ -345,7 +455,7 @@ public class SimulateEventCommand implements ICommand {
             setFinalField(linkData, "value", value);
             setFinalField(linkData, "comment", comment);
 
-            boolean linkExists = graph.hasPersonOrganizationLink(person, organization); // Implement in DataGraphManager
+            boolean linkExists = graph.hasPersonOrganizationLink(person, organization);
 
             if (linkExists) {
                 UpdatePersonOrganizationLinkEvent event = new UpdatePersonOrganizationLinkEvent(linkData, graph);
@@ -362,6 +472,16 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
+    /**
+     * Simulates the creation or update of a link between an Organization and a Media entity.
+     * Prompts for source organization, target media, equality type, and link value.
+     * Creates an {@link OrganizationMediaLink} object.
+     * Checks for link existence to publish either a {@link NewOrganizationMediaLinkEvent}
+     * or an {@link UpdateOrganizationMediaLinkEvent}.
+     *
+     * @param graph   The {@link DataGraphManager} instance.
+     * @param console The {@link Console} instance.
+     */
     private void simulateOrganizationMediaLink(DataGraphManager graph, Console console) {
         System.out.println("--- Simulating Organization-Media Link (New/Update) ---");
         Scanner scanner = console.scanner;
@@ -382,7 +502,7 @@ public class SimulateEventCommand implements ICommand {
             setFinalField(linkData, "equalityType", equalityType);
             setFinalField(linkData, "value", value);
 
-            boolean linkExists = graph.hasOrganizationMediaLink(organization, media); // Implement in DataGraphManager
+            boolean linkExists = graph.hasOrganizationMediaLink(organization, media);
 
             if (linkExists) {
                 UpdateOrganizationMediaLinkEvent event = new UpdateOrganizationMediaLinkEvent(linkData, graph);
@@ -399,6 +519,17 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
+    /**
+     * Simulates the creation or update of a link between two Organization entities.
+     * Prompts for source organization, target organization, equality type, link value, and an optional comment.
+     * Ensures source and target organizations are not the same.
+     * Creates an {@link OrganizationOrganizationLink} object.
+     * Checks for link existence to publish either a {@link NewOrganizationOrganizationLinkEvent}
+     * or an {@link UpdateOrganizationOrganizationLinkEvent}.
+     *
+     * @param graph   The {@link DataGraphManager} instance.
+     * @param console The {@link Console} instance.
+     */
     private void simulateOrganizationOrganizationLink(DataGraphManager graph, Console console) {
         System.out.println("--- Simulating Organization-Organization Link (New/Update) ---");
         Scanner scanner = console.scanner;
@@ -427,7 +558,7 @@ public class SimulateEventCommand implements ICommand {
             setFinalField(linkData, "value", value);
             setFinalField(linkData, "comment", comment);
 
-            boolean linkExists = graph.hasOrganizationOrganizationLink(sourceOrg, targetOrg); // Implement in DataGraphManager
+            boolean linkExists = graph.hasOrganizationOrganizationLink(sourceOrg, targetOrg);
 
             if (linkExists) {
                 UpdateOrganizationOrganizationLinkEvent event = new UpdateOrganizationOrganizationLinkEvent(linkData, graph);
@@ -444,20 +575,27 @@ public class SimulateEventCommand implements ICommand {
         }
     }
 
-
     /**
      * Utility method to set a private final field using reflection.
-     * This is generally not recommended but can be necessary for data classes
-     * that don't provide setters or appropriate constructors.
+     *
+     * @param object    The object on which to set the field.
+     * @param fieldName The name of the field to set.
+     * @param value     The value to set the field to.
+     * @throws NoSuchFieldException   If a field with the specified name is not found.
+     * @throws IllegalAccessException If the specified field is inaccessible.
      */
     private static void setFinalField(Object object, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
         Field field = object.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
+        field.setAccessible(true); // Allows modification of private (and final) fields
         field.set(object, value);
     }
 
-    public void printUsage() { // Kept from original template, can be adapted or removed
+    /**
+     * Prints usage instructions for the 'simulate' command.
+     */
+    public void printUsage() {
         System.out.println("Usage: simulate <eventType>");
-        System.out.println("Possible event types: newPublication, newMedia, newPerson, newOrganization, personMediaLink, etc.");
+        System.out.println("Follow the on-screen prompts to select an event type and provide necessary data.");
+        System.out.println("Example event types include: newPublication, newMedia, newPerson, newOrganization, personMediaLink, etc.");
     }
 }
