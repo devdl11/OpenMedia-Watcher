@@ -2,8 +2,10 @@ package fr.dl11.openmedia.datasource;
 
 import fr.dl11.openmedia.datasource.data.DataRecord;
 import fr.dl11.openmedia.datasource.data.RawData;
+import fr.dl11.openmedia.datasource.data.SourcedRawData;
 import fr.dl11.openmedia.datasource.exceptions.ParsingException;
 import fr.dl11.openmedia.datasource.mappers.IDataMapper;
+import fr.dl11.openmedia.datasource.mappers.SourcedDataMapper;
 import fr.dl11.openmedia.datasource.parsers.IDataParser;
 import fr.dl11.openmedia.exceptions.FailedEventHandling;
 import fr.dl11.openmedia.types.DataType;
@@ -62,9 +64,17 @@ public class DataPipelineManager implements IRawDataHandler {
             throw new IllegalArgumentException("No parser found for data type: " + rawData.dataType());
         }
 
+        String source = null;
+        if (rawData instanceof SourcedRawData sourcedRawData) {
+            source = sourcedRawData.source();
+        }
+
         for (DataRecord record : parsedData) {
             for (IDataMapper<?> mapper : mappers) {
-                if (!mapper.canMap(record))
+                if (source != null && mapper instanceof SourcedDataMapper<?> sourcedDataMapper) {
+                    if (!sourcedDataMapper.canMap(record, source))
+                        continue;
+                } else if (!mapper.canMap(record))
                     continue;
 
                 Object output = mapper.mapData(record);
@@ -73,6 +83,7 @@ public class DataPipelineManager implements IRawDataHandler {
                 }
 
                 System.out.println(output);
+                break;
 
             }
         }

@@ -11,6 +11,7 @@ import fr.dl11.openmedia.data.persons.PersonOrganizationLink;
 import fr.dl11.openmedia.datasource.DataPipelineManager;
 import fr.dl11.openmedia.datasource.mappers.DataMapperWithIgnores;
 import fr.dl11.openmedia.datasource.mappers.DefaultDataMapper;
+import fr.dl11.openmedia.datasource.mappers.SourcedDataMapper;
 import fr.dl11.openmedia.datasource.parsers.CSVParser;
 import fr.dl11.openmedia.events.EventHandler;
 import fr.dl11.openmedia.exceptions.FailedEventHandling;
@@ -32,12 +33,24 @@ public class MediaWatcher implements EventHandler<NewRawDataEvent> {
         // Add mappers for persons
         dataPipelineManager.addMapper(new PersonMapper());
         dataPipelineManager.addMapper(new DefaultDataMapper<>(PersonMediaLinkData.class));
-        dataPipelineManager.addMapper(new DataMapperWithIgnores<>(PersonOrganizationLink.class, List.of("id")));
+        dataPipelineManager.addMapper(
+                new SourcedDataMapper<>(
+                        new DataMapperWithIgnores<>(PersonOrganizationLink.class, List.of("id")),
+                        List.of("personne-organisation")
+                ));
 
         // Add mappers for organizations
         dataPipelineManager.addMapper(new DefaultDataMapper<>(OrganizationData.class));
-        dataPipelineManager.addMapper(new DataMapperWithIgnores<>(OrganizationMediaLink.class, List.of("id")));
-        dataPipelineManager.addMapper(new DataMapperWithIgnores<>(OrganizationOrganizationLink.class, List.of("id")));
+        dataPipelineManager.addMapper(
+                new SourcedDataMapper<>(
+                        new DataMapperWithIgnores<>(OrganizationMediaLink.class, List.of("id")),
+                        List.of("organisation-media")
+                ));
+        dataPipelineManager.addMapper(
+                new SourcedDataMapper<>(
+                        new DataMapperWithIgnores<>(OrganizationOrganizationLink.class, List.of("id")),
+                        List.of("organisation-organisation")
+                ));
     }
 
     public MediaWatcher(DataPipelineManager dataPipelineManager) {
