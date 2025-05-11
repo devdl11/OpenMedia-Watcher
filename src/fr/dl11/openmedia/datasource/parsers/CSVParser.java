@@ -49,6 +49,7 @@ public class CSVParser implements IDataParser {
                         values = Arrays.copyOf(values, headers.length);
 
                     for (int i = 0; i < values.length; i++)
+                        //noinspection ConstantConditions
                         if (values[i] == null)
                             values[i] = "";
 
