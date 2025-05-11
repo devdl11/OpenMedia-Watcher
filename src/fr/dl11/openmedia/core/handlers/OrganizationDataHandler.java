@@ -2,13 +2,27 @@ package fr.dl11.openmedia.core.handlers;
 
 import fr.dl11.openmedia.core.DataGraphManager;
 import fr.dl11.openmedia.core.EventBus;
-import fr.dl11.openmedia.data.organization.OrganizationMediaLink;
 import fr.dl11.openmedia.events.Event;
 import fr.dl11.openmedia.events.EventHandler;
 import fr.dl11.openmedia.events.data.organization.*;
 import fr.dl11.openmedia.exceptions.FailedEventHandling;
 
+/**
+ * Handler for processing organization-related events.
+ *
+ * <p>This class implements {@link EventHandler} to handle various organization-related events,
+ * such as {@link NewOrganizationEvent}, {@link NewOrganizationMediaLinkEvent}, and others.
+ * It subscribes to the {@link EventBus} and processes events by updating the
+ * {@link DataGraphManager} with organization-related data.
+ */
 public class OrganizationDataHandler implements EventHandler<Event> {
+
+    /**
+     * Constructs a new OrganizationDataHandler.
+     *
+     * <p>Registers this handler to the {@link EventBus} to listen for organization-related events,
+     * including {@link NewOrganizationEvent}, {@link NewOrganizationMediaLinkEvent}, and others.
+     */
     public OrganizationDataHandler() {
         EventBus bus = EventBus.getInstance();
 
@@ -19,6 +33,22 @@ public class OrganizationDataHandler implements EventHandler<Event> {
         bus.subscribe(UpdateOrganizationOrganizationLinkEvent.class, this);
     }
 
+    /**
+     * Handles an incoming event.
+     *
+     * <p>Processes the event based on its type:
+     * <ul>
+     *     <li>{@link NewOrganizationEvent}: Adds a new organization to the {@link DataGraphManager}.</li>
+     *     <li>{@link NewOrganizationMediaLinkEvent}: Adds a new link between an organization and media.</li>
+     *     <li>{@link NewOrganizationOrganizationLinkEvent}: Adds a new link between two organizations.</li>
+     *     <li>{@link UpdateOrganizationMediaLinkEvent}: Updates an existing link between an organization and media.</li>
+     *     <li>{@link UpdateOrganizationOrganizationLinkEvent}: Updates an existing link between two organizations.</li>
+     * </ul>
+     * If the event type is unrecognized, it is ignored.
+     *
+     * @param event The {@link Event} to handle.
+     * @throws FailedEventHandling If an error occurs while handling the event.
+     */
     @Override
     public void handleEvent(Event event) throws FailedEventHandling {
         assert event != null;
@@ -94,7 +124,8 @@ public class OrganizationDataHandler implements EventHandler<Event> {
                 graphManager.onUpdateOrganizationOrganizationLink(organizationModel, targetOrganizationModel, organizationOrganizationLinkData.getValue(),
                         organizationOrganizationLinkData.getEqualityType());
             }
-            default -> {}
+            default -> {
+            }
         }
     }
 }
